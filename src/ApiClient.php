@@ -5,40 +5,10 @@ namespace Sempico\Api;
 class ApiClient 
 {
     /**
-	 * api token
-	 * @var string
-	 */
-    private string $token;
-
-    /**
 	 * domain
 	 * @var string
 	 */
-    private string $domain;
-
-    public function __construct(string $token, string $domain)
-    {
-        $this->token = $token;
-        $this->domain = $domain;
-    } 
-
-    /**
-	 * Get api token
-	 * @return string
-	 */
-    public function getToken(): string
-    {
-        return $this->token;
-    }
-
-    /**
-	 * Get api domain
-	 * @return string
-	 */
-    public function getDomain(): string
-    {
-        return $this->domain;
-    }
+    private string $domain = 'https://api.sempico.solutions/';
 
     /**
      * Make curl request
@@ -51,12 +21,6 @@ class ApiClient
     {
         $output = [];
         $ch = curl_init();
-
-        // Header
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json',
-            'x-access-token: '. $this->token
-        ]);
 
         // Url
         curl_setopt($ch, CURLOPT_URL, $this->domain . $url);

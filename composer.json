@@ -1,6 +1,6 @@
 {
-    "name": "sempico/sempico-php",
-    "description": "Api library to interact with Sempico Solutions REST Api",
+    "name": "sempico/api-sms-php",
+    "description": "Api library to interact with Sempico Solutions Api",
     "type": "library",
     "version": "1.0.0",
     "minimum-stability": "stable",
