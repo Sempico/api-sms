@@ -17,7 +17,7 @@ class ApiClient
      * @param string|bool $customMethod
      * @return array
      */
-    public function curlRequest(string $url, string|bool $customMethod, array $data): array
+    public function curlRequest(string $url, string|bool $customMethod, array $data): mixed
     {
         $output = [];
         $ch = curl_init();
@@ -51,8 +51,8 @@ class ApiClient
     {
         if (!strlen($data['error'])) {
             $data['result'] = json_decode($data['result']);
-            if (isset($data['result']['error_code']) && strlen($data['result']['error_code'])) {
-                $data['error'] = $data['result']['error'];
+            if (isset($data['result']->error_code) && strlen($data['result']->error_code)) {
+                $data['error'] = $data['result']->error;
             }
         }
 
