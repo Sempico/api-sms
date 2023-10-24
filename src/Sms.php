@@ -11,7 +11,7 @@ class Sms
      */
     public static function send(array $config)
     {
-        $route = 'v1/send'.http_build_query($config);
+        $route = 'send?'.http_build_query($config);
 
         $client = new ApiClient();
 
@@ -26,7 +26,7 @@ class Sms
      */
     public static function refactore(array $config)
     {
-        $route = 'v1/replacement?'.http_build_query($config);
+        $route = 'replacement?'.http_build_query($config);
 
         $client = new ApiClient();
 
