@@ -37,3 +37,6 @@ $result = Sms::refactore([
   'text'      => 'Hello world',                      // Content SMS for sending, is required
 ]); 
 ```
+
+### License
+MIT License
