@@ -1,6 +1,4 @@
-# SAAS Sempico SMS Library
-Zenziva SMS Online Gateway Library based on Zenziva [Documentation](https://www.zenziva.id/dokumentasi/)
-
+# Client Sempico SMS Api Library
 
 ## Requirements
 
@@ -11,164 +9,31 @@ Zenziva SMS Online Gateway Library based on Zenziva [Documentation](https://www.
 ### Install with Composer
 Recommended install via [composer](http://getcomposer.org)
 ```bash
-composer require sempico/sempico-php
+composer require sempico/api-sms-php
 ```
 
-#### Simple usage
+#### Usage
 ```php
-use Sempico\Api\ApiClient;
+use Sempico\Api\Sms;
 
-// create api cient for usage
-$client = new ApiClient('Dfdda23vwWv2khHs'); //parametr is your restapi token
+// Send sms
+$result = Sms::send([
+  'token'     => 'gbBX8dB7kDvBeo0H-VN2CX0bAXXbyJ',   // Token created in Web app, is required
+  'phone'     => 12345678910,                        // Phone number in international format, is required
+  'senderID'  => 41,                                 // ID of sender from which SMS will be send, is required
+  'text'      => 'Hello world',                      // Content SMS for sending, is required
+  'type'      => 'sms!',                             // Type of SMS or HLR or MNP
+  'lifetime'  => 86400,                              // How many seconds will this SMS live
+  'beginDate' => '2022-10-01',                       // Date when SMS should be send
+  'beginTime' => '15:15:15',                         // Time when SMS should be send in selected beginDate
+  'delivery'  => 'TRUE'                              // Allow / disallow get DLR back
+]); 
+
+// Refactore SMS credentials
+$result = Sms::refactore([
+  'token'     => 'gbBX8dB7kDvBeo0H-VN2CX0bAXXbyJ',   // Token created in Web app, is required
+  'phone'     => 12345678910,                        // Phone number in international format, is required
+  'senderID'  => 41,                                 // ID of sender from which SMS will be send, is required
+  'text'      => 'Hello world',                      // Content SMS for sending, is required
+]); 
 ```
-
-#### Source price
-```php
-use Sempico\Api\SourcePrice;
-
-$sourcePrice = new SourcePrice($client); //parametr $client is ApiCLient object
-
-//Get all source prices
-$all = $sourcePrice->getAll([
-  "MCC" => "255",
-  "MNC" => "5",
-  "id_aggregating" => "1",
-  "id_aggregating_type" => "1",
-  "type_sms" => "sms",
-  "limit" => "1000",
-  "page" => "1"
-]);
-
-//Update
-$sourcePriceId = 33;
-$updateResult = $sourcePrice->update($sourcePriceId, [
-  "MCC" => "255",
-  "MNC" => "5",
-  "id_aggregating" => "1",
-  "id_aggregating_type" => "1",
-  "type_sms" => "sms",
-  "id_currency" => "1",
-  "price" => "0.02"
-]);
-
-//Create
-$createResult = $sourcePrice->create([
-  "MCC" => "255",
-  "MNC" => "5",
-  "id_aggregating" => "1",
-  "id_aggregating_type" => "1",
-  "type_sms" => "sms",
-  "id_currency" => "1",
-  "price" => "0.04"
-]);
-
-//Delete
-$sourcePriceId = 33;
-$createResult = $sourcePrice->create($sourcePriceId);
-```
-Default type is `reguler` if 3rd parameter not set.
-
-#### SMS Center
-```php
-$sms = new Sms('faytranevozter', '123456', 'sms_center');
-$sms->subdomain('mysubdomain'); // chainable, [required for sms_center]
-$sms->send('089765432123', 'Helaw! this is from sms_center');
-// or
-$sms = new Sms('faytranevozter', '123456');
-$sms->type('sms_center'); // chainable
-$sms->subdomain('mysubdomain'); // chainable, [required for sms_center]
-// send sms
-$sms->send('089765432123', 'Helaw! this is from sms_center'); // send(number, text, otp)
-```
-Default type is `reguler` if 3rd parameter not set.
-
-#### OTP SMS
-Zenziva now apply special treatment for SMS OTP. See [#Zenziva Docs](https://www.zenziva.id/dokumentasi/#1487744370576-71f03366-9c88)
-> Untuk mengirim SMS OTP, wajib menambahkan parameter type=otp
-```php
-$sms = new Sms('faytranevozter', '123456', 'masking');
-$sms->send('089765432123', 'Helaw! this is masking sms', TRUE);
-// or
-$sms = new Sms('faytranevozter', '123456');
-$sms->otp(TRUE); // chainable
-// send sms
-$sms->send('089765432123', 'Helaw! this is masking sms'); // send(number, text, otp)
-```
-
-#### Chaining
-```php
-$sms = new Sms();
-$sms->username('faytranevozter')
-    ->password('123456')
-    ->type('masking')
-    ->to('089765432123')
-    ->message('Helaw!')
-    ->send();
-```
-
-#### Handling Response
-##### Checking SMS Status
-```php
-$sms = new Sms('faytranevozter', '123456');
-$is_send = $sms->send('089765432123', 'Helaw! this is my sms');
-if ($is_send) {
-    echo "Sms sent!";
-} else {
-    echo "Uh-oh! Failed to send sms";
-}
-```
-##### Get Response
-```php
-$sms = new Sms('faytranevozter', '123456');
-$sms->send('089765432123', 'Helaw! this is my sms');
-$sms->send('082341561273', 'Helaw! this is my second sms');
-
-// get all response
-print_r($sms->responses()); // return array of response
-
-// get last response
-print_r($sms->last_response()); // return last response
-
-```
-##### Get Error
-```php
-$sms = new Sms('faytranevozter', '123456');
-$sms->send('089765432123', 'Helaw! this is my sms');
-$sms->send('082341561273', 'Helaw! this is my second sms');
-
-// get all error
-print_r($sms->errors()); // return array of error
-
-// get last error
-print_r($sms->last_error()); // return last error
-
-```
-
-#### Using Codeigniter Framework
-Creating library `Zenziva.php`
-```php
-use Faytranevozter\Zenziva\Sms;
-
-class Zenziva extends Sms {
-    function __construct($params=array()) {
-        parent::__construct(...$params);
-    }
-}
-```
-Load Zenziva library from controller
-```php
-...
-
-$this->load->library('Zenziva', ['faytranevozter', '123456', 'reguler']);
-$this->zenziva->send('089765432123', 'Helaw! this is my sms');
-
-...
-```
-
-## Credits and License
-### Author
-Fahrur Rifai [fahrur.dev](https://www.fahrur.dev)  
-Twitter [@faytranevozter](https://twitter.com/faytranevozter)
-
-### License
-MIT License

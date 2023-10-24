@@ -5,26 +5,17 @@ namespace Sempico\Api;
 class Sms 
 {
     /**
-	 * Api client
-	 * @var ApiClient
-	 */
-    private $client;
-
-    public function __construct(ApiClient $client)
-    {
-        $this->client = $client;
-    } 
-
-    /**
      * Get all source prices
      * @param array $config
      * @return array
      */
-    public function send(array $config)
+    public static function send(array $config)
     {
         $route = 'v1/send'.http_build_query($config);
 
-        return $this->client->curlRequest($route, false, []);
+        $client = new ApiClient();
+
+        return $client->curlRequest($route, false, []);
     }
 
     /**
@@ -33,10 +24,12 @@ class Sms
      * @param array $config
      * @return array
      */
-    public function refactore(array $config)
+    public static function refactore(array $config)
     {
         $route = 'v1/replacement?'.http_build_query($config);
 
-        return $this->client->curlRequest($route, false, []);
+        $client = new ApiClient();
+
+        return $client->curlRequest($route, false, []);
     }
 }
